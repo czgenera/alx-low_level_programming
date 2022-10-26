@@ -1,47 +1,47 @@
 #include "lists.h"
+#include <stdlib.h>
 
 /**
- * delete_nodeint_at_index - deletes the node at index
- * of a linked list.
- * @head: head of a list.
- * @index: index of the list where the node is
- * deleted.
+ * reverse_recur - recursively reverses a listint list
  *
- * Return: 1 if it succeeded, -1 if it failed.
+ * @first: node to reverse
+ * @second: node after node to reverse
+ *
+ * Return: void
  */
-int delete_nodeint_at_index(listint_t **head, unsigned int index)
+listint_t *reverse_recur(listint_t *first, listint_t *second)
 {
-	unsigned int i;
-	listint_t *prev;
-	listint_t *next;
+	listint_t *ptr, *prev = NULL;
 
-	prev = *head;
-
-	if (index != 0)
+	ptr = first;
+	while (ptr->next != second)
 	{
-		for (i = 0; i < index - 1 && prev != NULL; i++)
-		{
-			prev = prev->next;
-		}
-	}
+		prev = ptr;
+		     ptr = ptr->next;
+		     }
 
-	if (prev == NULL || (prev->next == NULL && index != 0))
-	{
-		return (-1);
-	}
+		     if (prev != NULL)
+		     	prev->next = first;
+			second = first->next;
+			first->next = ptr->next;
+			if (first != ptr && second != first)
+			   second = reverse_recur(second, first);
+			   ptr->next = second;
+			   return (ptr);
+}
 
-	next = prev->next;
+/**
+ * reverse_listint - reverses a listint list
+ *
+ * @head: list to reverse
+ *
+ * Return: new head of list
+ */
+listint_t *reverse_listint(listint_t **head)
+{
+	if (head == NULL || *head == NULL)
+	   return (NULL);
 
-	if (index != 0)
-	{
-		prev->next = next->next;
-		free(next);
-	}
-	else
-	{
-		free(prev);
-		*head = next;
-	}
-
-	return (1);
+	   *head = reverse_recur(*head, NULL);
+	   return (*head);
 }
